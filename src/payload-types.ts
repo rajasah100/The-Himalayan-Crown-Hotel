@@ -210,6 +210,8 @@ export interface Media {
    * Set a category to show this file on the public Gallery page.
    */
   galleryCategory?: ('hotel' | 'rooms' | 'dining' | 'weddings' | 'wellness' | 'nepal') | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -772,6 +774,8 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
   galleryCategory?: T;
+  prefix?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

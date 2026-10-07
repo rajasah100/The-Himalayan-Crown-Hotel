@@ -57,6 +57,26 @@ Images are served with `f_auto,q_auto` (WebP/AVIF, smart compression). To move e
 run `pnpm media:cloudinary` once after adding the keys — URLs are derived from filenames, so no database
 changes are needed. The adapter lives in `src/lib/cloudinary.ts`.
 
+## Deploying to Vercel
+
+1. **Database** — Vercel project → *Storage* → add **Neon Postgres**. It sets `DATABASE_URL` for you.
+2. **Environment variables** (Settings → Environment Variables):
+   `PAYLOAD_SECRET` (long random string), `NEXT_PUBLIC_SITE_URL` (e.g. `https://himalayancrown.vercel.app`),
+   `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`. Cloudinary is required on Vercel —
+   there is no persistent disk.
+3. **Deploy** — import the GitHub repo. Vercel runs `pnpm vercel-build`, which applies database migrations
+   (`src/migrations`) and then builds.
+4. **Content** — from your machine, point at the production database and seed it (uploads go to Cloudinary):
+   ```bash
+   DATABASE_URL="<neon url>" DB_PUSH=false CLOUDINARY_…=… pnpm seed
+   ```
+   Change the admin password straight after.
+
+Schema changes: edit collections → `pnpm migrate:create <name>` → commit the new file in `src/migrations`.
+
+Vercel limits request bodies to 4.5 MB, so larger files (e.g. the brand film) must be uploaded from a local
+admin connected to the production database, or added straight in Cloudinary.
+
 ## Content notes
 
 - Gallery: set **Gallery category** on any media item to show it on /gallery.

@@ -50,12 +50,17 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
+    // Dev auto-syncs the schema; production (and DB_PUSH=false, e.g. seeding a remote DB) uses migrations only.
+    push: process.env.NODE_ENV !== 'production' && process.env.DB_PUSH !== 'false',
+    migrationDir: path.resolve(dirname, 'migrations'),
   }),
   sharp,
   plugins: [
     // Media goes to Cloudinary when CLOUDINARY_* env vars are set; otherwise it stays on local disk (./media).
     cloudStoragePlugin({
       enabled: cloudinaryEnabled,
+      // Keep the schema identical with or without Cloudinary keys, so migrations never drift.
+      alwaysInsertFields: true,
       collections: {
         media: { adapter: cloudinaryAdapter, disableLocalStorage: true, disablePayloadAccessControl: true },
       },

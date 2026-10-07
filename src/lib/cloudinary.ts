@@ -14,6 +14,11 @@ export const cloudinaryEnabled = Boolean(
   process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET,
 )
 
+if (process.env.VERCEL && !cloudinaryEnabled) {
+  // Vercel has no persistent disk: uploads would vanish on the next deploy.
+  console.warn('[media] CLOUDINARY_* env vars are missing — uploads will not persist on Vercel.')
+}
+
 const FOLDER = (process.env.CLOUDINARY_FOLDER || 'himalayan-crown').replace(/\/+$/, '')
 const VIDEO_EXT = new Set(['mp4', 'webm', 'mov', 'm4v'])
 

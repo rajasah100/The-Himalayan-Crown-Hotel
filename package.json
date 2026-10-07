@@ -19,7 +19,10 @@
     "seed": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/index.ts",
     "seed:fresh": "cross-env SEED_FRESH=1 NODE_OPTIONS=--no-deprecation payload run src/seed/index.ts",
     "seed:bookings": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/demo-bookings.ts",
-    "media:cloudinary": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/media-to-cloudinary.ts"
+    "media:cloudinary": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/media-to-cloudinary.ts",
+    "vercel-build": "cross-env NODE_OPTIONS=--no-deprecation payload migrate && pnpm build",
+    "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
+    "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
