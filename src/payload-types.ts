@@ -67,8 +67,18 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
+    'room-types': RoomType;
+    dining: Dining;
+    dishes: Dish;
+    experiences: Experience;
+    'event-venues': EventVenue;
+    offers: Offer;
     media: Media;
+    bookings: Booking;
+    enquiries: Enquiry;
+    testimonials: Testimonial;
+    subscribers: Subscriber;
+    users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -76,19 +86,33 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
+    'room-types': RoomTypesSelect<false> | RoomTypesSelect<true>;
+    dining: DiningSelect<false> | DiningSelect<true>;
+    dishes: DishesSelect<false> | DishesSelect<true>;
+    experiences: ExperiencesSelect<false> | ExperiencesSelect<true>;
+    'event-venues': EventVenuesSelect<false> | EventVenuesSelect<true>;
+    offers: OffersSelect<false> | OffersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    bookings: BookingsSelect<false> | BookingsSelect<true>;
+    enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
+    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
+    subscribers: SubscribersSelect<false> | SubscribersSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'site-settings': SiteSetting;
+  };
+  globalsSelect: {
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -119,10 +143,364 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "room-types".
+ */
+export interface RoomType {
+  id: number;
+  name: string;
+  category: 'room' | 'suite' | 'villa';
+  /**
+   * Auto-generated from "name" if left empty.
+   */
+  slug?: string | null;
+  tagline?: string | null;
+  summary: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  heroImage?: (number | null) | Media;
+  /**
+   * Short muted clip: plays on hover in the home showcase and behind the room page hero.
+   */
+  video?: (number | null) | Media;
+  gallery?: (number | Media)[] | null;
+  sizeSqm?: number | null;
+  maxAdults: number;
+  maxChildren?: number | null;
+  bed?: string | null;
+  view?: string | null;
+  amenities?:
+    | {
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  baseRateUSD: number;
+  baseRateNPR?: number | null;
+  /**
+   * Number of physical rooms of this type sold on the website.
+   */
+  totalRooms: number;
+  featured?: boolean | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  alt: string;
+  caption?: string | null;
+  /**
+   * Set a category to show this file on the public Gallery page.
+   */
+  galleryCategory?: ('hotel' | 'rooms' | 'dining' | 'weddings' | 'wellness' | 'nepal') | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumb?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    hero?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "dining".
+ */
+export interface Dining {
+  id: number;
+  name: string;
+  /**
+   * Auto-generated from "name" if left empty.
+   */
+  slug?: string | null;
+  cuisine?: string | null;
+  summary: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  image?: (number | null) | Media;
+  /**
+   * Optional MP4/WebM. Shown muted on loop; the image is used as its poster.
+   */
+  video?: (number | null) | Media;
+  hours?: string | null;
+  dressCode?: string | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Dishes shown on the public /menu page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "dishes".
+ */
+export interface Dish {
+  id: number;
+  name: string;
+  /**
+   * Name in Nepali / Newari, e.g. मःमः
+   */
+  localName?: string | null;
+  description?: string | null;
+  category: 'newari' | 'momo' | 'nepali' | 'grill' | 'international' | 'desserts' | 'drinks';
+  priceNPR: number;
+  restaurant?: (number | null) | Dining;
+  tags?: ('signature' | 'vegetarian' | 'vegan' | 'spicy' | 'gluten-free')[] | null;
+  /**
+   * Optional — dishes with a photo are featured larger.
+   */
+  image?: (number | null) | Media;
+  available?: boolean | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Tours, adventures and spa rituals shown on /experiences and the home page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "experiences".
+ */
+export interface Experience {
+  id: number;
+  title: string;
+  /**
+   * Auto-generated from "title" if left empty.
+   */
+  slug?: string | null;
+  category: 'culture' | 'adventure' | 'wellness';
+  duration?: string | null;
+  priceFrom?: string | null;
+  summary: string;
+  image: number | Media;
+  /**
+   * Optional MP4/WebM. Shown muted on loop; the image is used as its poster.
+   */
+  video?: (number | null) | Media;
+  highlights?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Show on the home page.
+   */
+  featured?: boolean | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Ballrooms, courtyards and lawns shown on the Weddings page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event-venues".
+ */
+export interface EventVenue {
+  id: number;
+  name: string;
+  setting: 'indoor' | 'outdoor' | 'both';
+  /**
+   * Auto-generated from "name" if left empty.
+   */
+  slug?: string | null;
+  summary: string;
+  image?: (number | null) | Media;
+  /**
+   * Optional MP4/WebM. Shown muted on loop; the image is used as its poster.
+   */
+  video?: (number | null) | Media;
+  areaSqm?: number | null;
+  banquet?: number | null;
+  theatre?: number | null;
+  reception?: number | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offers".
+ */
+export interface Offer {
+  id: number;
+  title: string;
+  /**
+   * Auto-generated from "title" if left empty.
+   */
+  slug?: string | null;
+  summary: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  image?: (number | null) | Media;
+  validFrom?: string | null;
+  validTo?: string | null;
+  discountPercent?: number | null;
+  active?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "bookings".
+ */
+export interface Booking {
+  id: number;
+  reference: string;
+  status: 'pending' | 'confirmed' | 'cancelled' | 'expired';
+  paymentStatus: 'unpaid' | 'paid' | 'refunded' | 'pay-at-hotel';
+  paymentMethod?: ('esewa' | 'khalti' | 'card' | 'hotel') | null;
+  roomType: number | RoomType;
+  checkIn: string;
+  checkOut: string;
+  rooms: number;
+  adults: number;
+  children?: number | null;
+  guestName: string;
+  guestEmail: string;
+  guestPhone?: string | null;
+  guestCountry?: string | null;
+  specialRequests?: string | null;
+  totalAmount: number;
+  currency: 'USD' | 'NPR';
+  /**
+   * Pending bookings hold inventory for 15 minutes while the guest pays.
+   */
+  holdExpiresAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries".
+ */
+export interface Enquiry {
+  id: number;
+  type: 'general' | 'wedding' | 'event' | 'dining' | 'spa';
+  name: string;
+  email: string;
+  phone?: string | null;
+  preferredDate?: string | null;
+  guests?: number | null;
+  message: string;
+  status?: ('new' | 'in-progress' | 'closed') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Only publish genuine reviews, copied with the guest’s consent or from a public review site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials".
+ */
+export interface Testimonial {
+  id: number;
+  quote: string;
+  guestName: string;
+  origin?: string | null;
+  source?: ('tripadvisor' | 'google' | 'booking' | 'direct') | null;
+  rating?: number | null;
+  stayDate?: string | null;
+  /**
+   * Placeholder text — shown with a “Sample” label. Replace before launch.
+   */
+  isSample?: boolean | null;
+  published?: boolean | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subscribers".
+ */
+export interface Subscriber {
+  id: number;
+  email: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
+  id: number;
+  name?: string | null;
+  roles: ('admin' | 'reservations' | 'editor')[];
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -130,6 +508,7 @@ export interface User {
   resetPasswordExpiration?: string | null;
   salt?: string | null;
   hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
@@ -144,29 +523,10 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: string;
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: string;
+  id: number;
   key: string;
   data:
     | {
@@ -183,20 +543,60 @@ export interface PayloadKv {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: string | User;
+        relationTo: 'room-types';
+        value: number | RoomType;
+      } | null)
+    | ({
+        relationTo: 'dining';
+        value: number | Dining;
+      } | null)
+    | ({
+        relationTo: 'dishes';
+        value: number | Dish;
+      } | null)
+    | ({
+        relationTo: 'experiences';
+        value: number | Experience;
+      } | null)
+    | ({
+        relationTo: 'event-venues';
+        value: number | EventVenue;
+      } | null)
+    | ({
+        relationTo: 'offers';
+        value: number | Offer;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'bookings';
+        value: number | Booking;
+      } | null)
+    | ({
+        relationTo: 'enquiries';
+        value: number | Enquiry;
+      } | null)
+    | ({
+        relationTo: 'testimonials';
+        value: number | Testimonial;
+      } | null)
+    | ({
+        relationTo: 'subscribers';
+        value: number | Subscriber;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -206,10 +606,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -229,7 +629,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -237,25 +637,132 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
+ * via the `definition` "room-types_select".
  */
-export interface UsersSelect<T extends boolean = true> {
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
+export interface RoomTypesSelect<T extends boolean = true> {
+  name?: T;
+  category?: T;
+  slug?: T;
+  tagline?: T;
+  summary?: T;
+  description?: T;
+  heroImage?: T;
+  video?: T;
+  gallery?: T;
+  sizeSqm?: T;
+  maxAdults?: T;
+  maxChildren?: T;
+  bed?: T;
+  view?: T;
+  amenities?:
     | T
     | {
+        label?: T;
         id?: T;
-        createdAt?: T;
-        expiresAt?: T;
       };
+  baseRateUSD?: T;
+  baseRateNPR?: T;
+  totalRooms?: T;
+  featured?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "dining_select".
+ */
+export interface DiningSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  cuisine?: T;
+  summary?: T;
+  description?: T;
+  image?: T;
+  video?: T;
+  hours?: T;
+  dressCode?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "dishes_select".
+ */
+export interface DishesSelect<T extends boolean = true> {
+  name?: T;
+  localName?: T;
+  description?: T;
+  category?: T;
+  priceNPR?: T;
+  restaurant?: T;
+  tags?: T;
+  image?: T;
+  available?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "experiences_select".
+ */
+export interface ExperiencesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  category?: T;
+  duration?: T;
+  priceFrom?: T;
+  summary?: T;
+  image?: T;
+  video?: T;
+  highlights?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  featured?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event-venues_select".
+ */
+export interface EventVenuesSelect<T extends boolean = true> {
+  name?: T;
+  setting?: T;
+  slug?: T;
+  summary?: T;
+  image?: T;
+  video?: T;
+  areaSqm?: T;
+  banquet?: T;
+  theatre?: T;
+  reception?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offers_select".
+ */
+export interface OffersSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  summary?: T;
+  description?: T;
+  image?: T;
+  validFrom?: T;
+  validTo?: T;
+  discountPercent?: T;
+  active?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -263,6 +770,8 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  caption?: T;
+  galleryCategory?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -274,6 +783,133 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumb?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        hero?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "bookings_select".
+ */
+export interface BookingsSelect<T extends boolean = true> {
+  reference?: T;
+  status?: T;
+  paymentStatus?: T;
+  paymentMethod?: T;
+  roomType?: T;
+  checkIn?: T;
+  checkOut?: T;
+  rooms?: T;
+  adults?: T;
+  children?: T;
+  guestName?: T;
+  guestEmail?: T;
+  guestPhone?: T;
+  guestCountry?: T;
+  specialRequests?: T;
+  totalAmount?: T;
+  currency?: T;
+  holdExpiresAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries_select".
+ */
+export interface EnquiriesSelect<T extends boolean = true> {
+  type?: T;
+  name?: T;
+  email?: T;
+  phone?: T;
+  preferredDate?: T;
+  guests?: T;
+  message?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials_select".
+ */
+export interface TestimonialsSelect<T extends boolean = true> {
+  quote?: T;
+  guestName?: T;
+  origin?: T;
+  source?: T;
+  rating?: T;
+  stayDate?: T;
+  isSample?: T;
+  published?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subscribers_select".
+ */
+export interface SubscribersSelect<T extends boolean = true> {
+  email?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  roles?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  resetPasswordRequestedAt?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -314,6 +950,253 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  heroEyebrow?: string | null;
+  heroTitle: string;
+  heroSubtitle?: string | null;
+  /**
+   * Poster / fallback image.
+   */
+  heroImage?: (number | null) | Media;
+  /**
+   * Plays muted behind the hero. 10–20 s loop, under 5 MB.
+   */
+  heroVideo?: (number | null) | Media;
+  /**
+   * Full brand film opened by "Watch the film" (plays with controls).
+   */
+  filmVideo?: (number | null) | Media;
+  /**
+   * Evening hero (6 PM – 6 AM Kathmandu time). Leave empty to always use the day hero.
+   */
+  heroNightImage?: (number | null) | Media;
+  /**
+   * Optional evening loop.
+   */
+  heroNightVideo?: (number | null) | Media;
+  /**
+   * Short strip under the hero, e.g. “Best rate guarantee”.
+   */
+  benefits?:
+    | {
+        title: string;
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Background photo behind the “Guest stories” section.
+   */
+  reviewsImage?: (number | null) | Media;
+  ratingValue?: number | null;
+  ratingCount?: number | null;
+  ratingSource?: string | null;
+  introHeading?: string | null;
+  introBody?: string | null;
+  introImage?: (number | null) | Media;
+  /**
+   * Optional MP4/WebM. Shown muted on loop; the image is used as its poster.
+   */
+  introVideo?: (number | null) | Media;
+  quoteText?: string | null;
+  quoteCaption?: string | null;
+  quoteImage?: (number | null) | Media;
+  /**
+   * Optional MP4/WebM. Shown muted on loop; the image is used as its poster.
+   */
+  quoteVideo?: (number | null) | Media;
+  ctaImage?: (number | null) | Media;
+  /**
+   * Optional MP4/WebM. Shown muted on loop; the image is used as its poster.
+   */
+  ctaVideo?: (number | null) | Media;
+  menuIntro?: string | null;
+  menuImage?: (number | null) | Media;
+  /**
+   * Optional MP4/WebM. Shown muted on loop; the image is used as its poster.
+   */
+  menuVideo?: (number | null) | Media;
+  menuNote?: string | null;
+  /**
+   * Short line under the page title.
+   */
+  eventsIntro?: string | null;
+  eventsImage?: (number | null) | Media;
+  /**
+   * Optional MP4/WebM. Shown muted on loop; the image is used as its poster.
+   */
+  eventsVideo?: (number | null) | Media;
+  weddingStoryHeading?: string | null;
+  weddingStory?: string | null;
+  weddingStoryImage?: (number | null) | Media;
+  weddingStats?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  ceremonies?:
+    | {
+        title: string;
+        text: string;
+        image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  weddingQuote?: string | null;
+  weddingBandImage?: (number | null) | Media;
+  /**
+   * Optional MP4/WebM. Shown muted on loop; the image is used as its poster.
+   */
+  weddingBandVideo?: (number | null) | Media;
+  weddingPackages?:
+    | {
+        name: string;
+        priceFrom: string;
+        guests?: string | null;
+        /**
+         * One inclusion per line.
+         */
+        inclusions?: string | null;
+        highlight?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  plannerName?: string | null;
+  plannerPhone?: string | null;
+  plannerEmail?: string | null;
+  plannerImage?: (number | null) | Media;
+  phone?: string | null;
+  whatsapp?: string | null;
+  email?: string | null;
+  address?: string | null;
+  /**
+   * Google Maps link for “Get directions”.
+   */
+  mapUrl?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  locationImage?: (number | null) | Media;
+  /**
+   * Travel times shown in the home page location section.
+   */
+  distances?:
+    | {
+        place: string;
+        time: string;
+        id?: string | null;
+      }[]
+    | null;
+  instagram?: string | null;
+  facebook?: string | null;
+  tripadvisor?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  heroEyebrow?: T;
+  heroTitle?: T;
+  heroSubtitle?: T;
+  heroImage?: T;
+  heroVideo?: T;
+  filmVideo?: T;
+  heroNightImage?: T;
+  heroNightVideo?: T;
+  benefits?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  reviewsImage?: T;
+  ratingValue?: T;
+  ratingCount?: T;
+  ratingSource?: T;
+  introHeading?: T;
+  introBody?: T;
+  introImage?: T;
+  introVideo?: T;
+  quoteText?: T;
+  quoteCaption?: T;
+  quoteImage?: T;
+  quoteVideo?: T;
+  ctaImage?: T;
+  ctaVideo?: T;
+  menuIntro?: T;
+  menuImage?: T;
+  menuVideo?: T;
+  menuNote?: T;
+  eventsIntro?: T;
+  eventsImage?: T;
+  eventsVideo?: T;
+  weddingStoryHeading?: T;
+  weddingStory?: T;
+  weddingStoryImage?: T;
+  weddingStats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  ceremonies?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        image?: T;
+        id?: T;
+      };
+  weddingQuote?: T;
+  weddingBandImage?: T;
+  weddingBandVideo?: T;
+  weddingPackages?:
+    | T
+    | {
+        name?: T;
+        priceFrom?: T;
+        guests?: T;
+        inclusions?: T;
+        highlight?: T;
+        id?: T;
+      };
+  plannerName?: T;
+  plannerPhone?: T;
+  plannerEmail?: T;
+  plannerImage?: T;
+  phone?: T;
+  whatsapp?: T;
+  email?: T;
+  address?: T;
+  mapUrl?: T;
+  latitude?: T;
+  longitude?: T;
+  locationImage?: T;
+  distances?:
+    | T
+    | {
+        place?: T;
+        time?: T;
+        id?: T;
+      };
+  instagram?: T;
+  facebook?: T;
+  tripadvisor?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

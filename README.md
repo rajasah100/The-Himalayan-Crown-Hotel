@@ -1,67 +1,85 @@
-# Payload Blank Template
+# The Himalayan Crown
 
-This template comes configured with the bare minimum to get started on anything you need.
+Five-star hotel website: Next.js 16 · Payload CMS 3 (admin + API) · PostgreSQL · Tailwind CSS 4 · GSAP + Lenis.
 
-## Quick start
+## Getting started
 
-This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
+```bash
+cp .env.example .env          # set PAYLOAD_SECRET to a long random string
+docker compose up -d          # Postgres on localhost:5433
+pnpm install
+pnpm seed                     # demo rooms, dining, offers, photos + admin user (password printed once)
+pnpm dev                      # http://localhost:3000  ·  admin at /admin
+```
 
-## Quick Start - local setup
+In development Payload pushes schema changes to the database automatically. For production, create migrations with `pnpm payload migrate:create` and run `pnpm payload migrate` on deploy.
 
-To spin up this template locally, follow these steps:
+## Structure
 
-### Clone
+```
+src/
+  app/(frontend)/             public site: home, rooms, dining, menu, experiences, weddings, gallery, offers, contact, book
+  app/(frontend)/actions.ts   server actions: enquiries, booking hold, newsletter
+  app/(frontend)/template.tsx page-transition curtain
+  app/sitemap.ts, robots.ts   SEO
+  app/(payload)/              Payload admin + REST/GraphQL API (generated, don't edit)
+  collections/                RoomTypes, Dining, Dishes, Experiences, EventVenues, Offers, Media, Bookings,
+                              Enquiries, Testimonials, Subscribers, Users
+  globals/SiteSettings        home, menu, weddings, contact/location, social
+  components/home/            hero (day/night, live time + weather), benefits, rooms, weddings, experiences,
+                              reviews, gallery marquee, location
+  components/motion/          IntroLoader, SmoothScroll (Lenis), Reveal, ParallaxImage, Cursor
+  lib/availability.ts         rooms left per room type for a date range
+  lib/booking.ts              createBookingHold — transaction + advisory lock, prevents overbooking
+  lib/weather.ts              Open-Meteo current weather (cached 30 min)
+  seed/                       demo content (pnpm seed / pnpm seed:fresh)
+```
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+## Admin dashboard
 
-### Development
+`/admin` opens on a hotel dashboard (`src/components/admin/Dashboard.tsx`): today's arrivals and departures,
+rooms in-house, occupancy, bookings on hold, revenue this month, a 14-night occupancy chart, latest bookings,
+new enquiries and quick links. Booking figures are shown only to the **admin** and **reservations** roles.
+`pnpm seed:bookings` adds demo bookings (guest emails `demo-*@example.com`) so the dashboard has data.
 
-1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URL` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+## Media storage (Cloudinary)
 
-3. `pnpm install && pnpm dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+Uploads go to Cloudinary when these are set in `.env`; otherwise they are stored in `./media`:
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+```
+CLOUDINARY_CLOUD_NAME=…
+CLOUDINARY_API_KEY=…
+CLOUDINARY_API_SECRET=…
+CLOUDINARY_FOLDER=himalayan-crown
+```
 
-#### Docker (Optional)
+Images are served with `f_auto,q_auto` (WebP/AVIF, smart compression). To move existing local files,
+run `pnpm media:cloudinary` once after adding the keys — URLs are derived from filenames, so no database
+changes are needed. The adapter lives in `src/lib/cloudinary.ts`.
 
-If you prefer to use Docker for local development instead of a local MongoDB instance, the provided docker-compose.yml file can be used.
+## Content notes
 
-To do so, follow these steps:
+- Gallery: set **Gallery category** on any media item to show it on /gallery.
+- Guest reviews marked **Sample** are placeholders — replace with genuine reviews before launch.
+- The rating badge only appears when *Site Settings → Home → Guest rating* is filled in.
+- Evening hero (6 PM–6 AM Kathmandu time) uses *Hero night image* when set.
 
-- Modify the `MONGODB_URL` in your `.env` file to `mongodb://127.0.0.1/<dbname>`
-- Modify the `docker-compose.yml` file's `MONGODB_URL` to match the above `<dbname>`
-- Run `docker-compose up` to start the database, optionally pass `-d` to run in the background.
+## Booking model
 
-## How it works
+- `RoomTypes.totalRooms` is the inventory sold online.
+- A guest's booking is created as `pending` with `holdExpiresAt` = now + 15 min. Pending holds count against inventory until they expire.
+- Payment confirmation (phase 2) flips the booking to `confirmed` / `paid`.
+- `createBookingHold` takes a Postgres advisory lock per room type, so concurrent guests can't take the same last room.
 
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
+## Staff roles
 
-### Collections
+| Role | Can do |
+| --- | --- |
+| admin | everything, manages users |
+| editor | rooms, dining, offers, media, site settings |
+| reservations | bookings and enquiries |
 
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
+## Roadmap
 
-- #### Users (Authentication)
-
-  Users are auth-enabled collections that have access to the admin panel.
-
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/3.x/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
-
-- #### Media
-
-  This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
-
-### Docker
-
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
-
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
-
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
-
-## Questions
-
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+- **Phase 2:** eSewa / Khalti / card gateway, payment verification, booking emails (Resend) and SMS (Sparrow), cron to expire holds, rate limiting on forms.
+- **Phase 3:** channel manager / PMS sync, seasonal rates and promo codes, multi-language (next-intl), Spa & Experiences pages, SEO schema (`Hotel` JSON-LD), cloud media storage (S3/R2).

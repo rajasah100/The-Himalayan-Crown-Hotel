@@ -1,164 +1,185 @@
-:root {
-  --font-mono: 'Roboto Mono', monospace;
+@import 'tailwindcss';
+
+@theme {
+  --color-ink: #15120e;
+  --color-ink-soft: #2a251f;
+  --color-ivory: #f7f2e9;
+  --color-sand: #ece3d3;
+  --color-stone: #6f6558;
+  --color-gold: #b08a52;
+  --color-gold-light: #d4b98a;
+
+  --font-display: var(--font-cormorant), 'Times New Roman', serif;
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
+
+  --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-* {
-  box-sizing: border-box;
-}
-
-html {
-  font-size: 18px;
-  line-height: 32px;
-
-  background: rgb(0, 0, 0);
-  -webkit-font-smoothing: antialiased;
-}
-
-html,
-body,
-#app {
-  height: 100%;
-}
-
-body {
-  font-family: system-ui;
-  font-size: 18px;
-  line-height: 32px;
-
-  margin: 0;
-  color: rgb(1000, 1000, 1000);
-
-  @media (max-width: 1024px) {
-    font-size: 15px;
-    line-height: 24px;
+@keyframes kenburns {
+  from {
+    transform: scale(1.12);
+  }
+  to {
+    transform: scale(1);
   }
 }
 
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-h1 {
-  margin: 40px 0;
-  font-size: 64px;
-  line-height: 70px;
-  font-weight: bold;
-
-  @media (max-width: 1024px) {
-    margin: 24px 0;
-    font-size: 42px;
-    line-height: 42px;
+@keyframes scrollcue {
+  0% {
+    transform: translateY(-100%);
   }
-
-  @media (max-width: 768px) {
-    font-size: 38px;
-    line-height: 38px;
-  }
-
-  @media (max-width: 400px) {
-    font-size: 32px;
-    line-height: 32px;
+  100% {
+    transform: translateY(200%);
   }
 }
 
-p {
-  margin: 24px 0;
-
-  @media (max-width: 1024px) {
-    margin: calc(var(--base) * 0.75) 0;
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
   }
 }
 
-a {
-  color: currentColor;
+/* Intro loader is skipped (no flash) when it already ran this session. */
+.intro-seen [data-loader] {
+  display: none;
+}
 
-  &:focus {
-    opacity: 0.8;
-    outline: none;
+@layer base {
+  html {
+    background: var(--color-ivory);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
   }
 
-  &:active {
-    opacity: 0.7;
-    outline: none;
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-ivory);
+  }
+
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-ivory);
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--color-gold);
+    outline-offset: 3px;
   }
 }
 
-svg {
-  vertical-align: middle;
-}
-
-.home {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  height: 100vh;
-  padding: 45px;
-  max-width: 1024px;
-  margin: 0 auto;
-  overflow: hidden;
-
-  @media (max-width: 400px) {
-    padding: 24px;
+@layer components {
+  .eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 500;
   }
 
-  .content {
-    display: flex;
-    flex-direction: column;
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+  }
+
+  .container-luxe {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: clamp(1rem, 4vw, 3.5rem);
+  }
+
+  .btn {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    flex-grow: 1;
-
-    h1 {
-      text-align: center;
-    }
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition:
+      background-color 0.5s var(--ease-luxe),
+      color 0.5s var(--ease-luxe),
+      border-color 0.5s var(--ease-luxe);
   }
 
-  .links {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    a {
-      text-decoration: none;
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-    }
-
-    .admin {
-      color: rgb(0, 0, 0);
-      background: rgb(1000, 1000, 1000);
-      border: 1px solid rgb(0, 0, 0);
-    }
-
-    .docs {
-      color: rgb(1000, 1000, 1000);
-      background: rgb(0, 0, 0);
-      border: 1px solid rgb(1000, 1000, 1000);
-    }
+  .btn-gold {
+    background: var(--color-gold);
+    color: var(--color-ivory);
+  }
+  .btn-gold:hover {
+    background: var(--color-ink);
   }
 
-  .footer {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    @media (max-width: 1024px) {
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    p {
-      margin: 0;
-    }
-
-    .codeLink {
-      text-decoration: none;
-      padding: 0 0.5rem;
-      background: rgb(60, 60, 60);
-      border-radius: 4px;
-    }
+  .btn-outline {
+    border: 1px solid currentColor;
   }
+  .btn-outline:hover {
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+    color: var(--color-ivory);
+  }
+
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.6s var(--ease-luxe);
+  }
+  .link-underline:hover {
+    background-size: 100% 1px;
+  }
+
+  .field {
+    width: 100%;
+    background: transparent;
+    border-bottom: 1px solid color-mix(in oklab, currentColor 30%, transparent);
+    padding: 0.75rem 0;
+    font-size: 0.95rem;
+    transition: border-color 0.3s;
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-gold);
+  }
+  .field-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Safety net: if scripts never run, the page-transition curtain still gets out of the way. */
+@keyframes curtain-fallback {
+  to {
+    visibility: hidden;
+  }
+}
+[data-curtain] {
+  animation: curtain-fallback 0s 2.5s forwards;
 }

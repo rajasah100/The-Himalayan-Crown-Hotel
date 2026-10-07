@@ -8,6 +8,7 @@ const dirname = path.dirname(__filename)
 
 const nextConfig: NextConfig = {
   images: {
+    remotePatterns: [{ protocol: 'https', hostname: 'res.cloudinary.com' }],
     localPatterns: [
       {
         pathname: '/api/media/file/**',

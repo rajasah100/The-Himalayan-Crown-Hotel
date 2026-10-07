@@ -1,0 +1,332 @@
+// Hotel admin dashboard. Built on Payload's theme variables so light and dark mode both work.
+
+.hc-dash {
+  --hc-gold: #b08a52;
+  --hc-border: var(--theme-elevation-150);
+  --hc-card: var(--theme-elevation-0);
+  --hc-muted: var(--theme-elevation-500);
+  margin-bottom: calc(var(--base) * 2);
+
+  a {
+    color: inherit;
+  }
+}
+
+.hc-eyebrow {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--hc-gold);
+}
+
+.hc-dash__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.hc-dash__title {
+  margin: 6px 0 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 1.1;
+}
+
+.hc-dash__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.hc-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: var(--hc-gold);
+  color: #fff !important;
+  border-radius: 2px;
+
+  &:hover {
+    filter: brightness(0.92);
+  }
+
+  &--ghost {
+    background: transparent;
+    color: var(--theme-text) !important;
+    border: 1px solid var(--hc-border);
+  }
+}
+
+.hc-kpis {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  gap: 1px;
+  margin-bottom: 20px;
+  background: var(--hc-border);
+  border: 1px solid var(--hc-border);
+}
+
+.hc-kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 20px;
+  background: var(--hc-card);
+  text-decoration: none;
+
+  &--link:hover {
+    background: var(--theme-elevation-50);
+  }
+
+  &__label {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--hc-muted);
+  }
+
+  &__value {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 32px;
+    line-height: 1;
+  }
+
+  &__hint {
+    font-size: 12px;
+    color: var(--hc-muted);
+  }
+}
+
+.hc-card {
+  padding: 20px 22px;
+  margin-bottom: 20px;
+  background: var(--hc-card);
+  border: 1px solid var(--hc-border);
+
+  &__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+
+    h2 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    a {
+      font-size: 12px;
+      color: var(--hc-muted);
+      text-decoration: none;
+
+      &:hover {
+        color: var(--hc-gold);
+      }
+    }
+  }
+}
+
+.hc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+
+  .hc-card {
+    margin-bottom: 0;
+  }
+
+  &__wide {
+    grid-column: 1 / -1;
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hc-muted {
+  color: var(--hc-muted);
+  font-size: 13px;
+}
+
+.hc-small {
+  margin: 14px 0 0;
+  font-size: 12px;
+}
+
+.hc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th {
+    padding: 8px 10px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--hc-muted);
+    border-bottom: 1px solid var(--hc-border);
+  }
+
+  td {
+    padding: 10px;
+    border-bottom: 1px solid var(--theme-elevation-100);
+    white-space: nowrap;
+  }
+
+  tr:last-child td {
+    border-bottom: 0;
+  }
+
+  a {
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--hc-gold);
+    }
+  }
+}
+
+.hc-pill {
+  display: inline-block;
+  padding: 2px 10px;
+  font-size: 11px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+
+  &--confirmed {
+    color: #2f7d4f;
+  }
+  &--pending {
+    color: #a86a12;
+  }
+  &--cancelled,
+  &--expired {
+    color: var(--hc-muted);
+  }
+}
+
+.hc-badge {
+  margin-left: 8px;
+  padding: 1px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #fff;
+  background: var(--hc-gold);
+  border-radius: 999px;
+}
+
+.hc-list,
+.hc-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hc-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--theme-elevation-100);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  a {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-decoration: none;
+    font-size: 14px;
+  }
+}
+
+.hc-links li a {
+  display: block;
+  padding: 9px 0;
+  font-size: 14px;
+  text-decoration: none;
+  border-bottom: 1px solid var(--theme-elevation-100);
+
+  &::after {
+    content: ' →';
+    color: var(--hc-gold);
+  }
+
+  &:hover {
+    color: var(--hc-gold);
+  }
+}
+
+// Occupancy chart
+.hc-chart {
+  position: relative;
+
+  &__grid {
+    stroke: var(--theme-elevation-100);
+    stroke-width: 1;
+  }
+
+  &__baseline {
+    stroke: var(--theme-elevation-300);
+    stroke-width: 1;
+  }
+
+  &__axis {
+    font-size: 10px;
+    fill: var(--theme-elevation-600);
+  }
+
+  &__axis--muted {
+    fill: var(--theme-elevation-400);
+  }
+
+  &__tip {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+    background: var(--theme-elevation-900);
+    color: var(--theme-elevation-0);
+    border-radius: 3px;
+  }
+}
+
+.hc-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
